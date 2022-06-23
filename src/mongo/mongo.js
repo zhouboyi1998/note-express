@@ -8,25 +8,31 @@ Mongoose.connect(URI, (err) => {
         console.log(err)
         return
     } else {
-        console.log("Success to connect MongoDB")
+        console.log("Connect success --> " + URI)
     }
 })
 
-// Linux 命令模型
-const Command = new Mongoose.Schema({
-    id: Mongoose.ObjectId,
-    command: String,
-    usage: String,
-    params: [
-        {
-            param: String,
-            description: String
-        }
-    ]
-})
+// Linux 命令模型架构
+const CommandSchema = new Mongoose.Schema(
+    {
+        _id: Mongoose.ObjectId,
+        command: String,
+        usage: String,
+        params: [
+            {
+                param: String,
+                description: String
+            }
+        ]
+    },
+    {
+        // 不需要插入版本号
+        versionKey: false
+    }
+)
 
-// 使用模型获取连接
-const Connection = Mongoose.model("Command", Command, "linux_command")
+// 连接文档集合, 获取 Linux 命令模型
+const CommandModel = Mongoose.model("Command", CommandSchema, "linux_command")
 
-// 将连接导出给其它文件使用
-module.exports = { Connection }
+// 将模型导出
+module.exports = { CommandModel }
