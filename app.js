@@ -29,6 +29,24 @@ App.route("/note/command/list").get((request, response) => {
     })
 })
 
+// 获取所有 Linux 命令名称
+App.route("/note/command/list/name").get((request, response) => {
+    Connection.find({}, (err, result) => {
+        if (err) {
+            throw err
+        } else {
+            let nameList = []
+            // 组装 Linux 命令名称数组
+            result.filter(command => {
+                nameList.push(command.command)
+                console.log(command.command)
+            })
+            // 返回 JSON 格式数据
+            response.json(nameList)
+        }
+    })
+})
+
 // 监听 127.0.0.1:18093
 App.listen(18093)
 

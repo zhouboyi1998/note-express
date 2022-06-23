@@ -1,9 +1,9 @@
 // 引入 Mongoose 包, 创建 MongoDB 客户端
-const Mongoose = require('mongoose')
-const uri = "mongodb://note:123456@127.0.0.1:27017/note"
+const Mongoose = require("mongoose")
+const URI = "mongodb://note:123456@127.0.0.1:27017/note"
 
 // 连接 MongoDB 服务端
-Mongoose.connect(uri, (err) => {
+Mongoose.connect(URI, (err) => {
     if (err) {
         console.log(err)
         return
