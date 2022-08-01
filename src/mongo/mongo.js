@@ -1,13 +1,13 @@
 // 引入 Mongoose 包, 创建 MongoDB 客户端
-const mongoose = require("mongoose")
-const URI = "mongodb://note:123456@127.0.0.1:27017/note"
+const mongoose = require('mongoose')
+const URI = 'mongodb://note:123456@127.0.0.1:27017/note'
 
 // 连接 MongoDB 服务端
 mongoose.connect(URI, (err) => {
     if (err) {
         console.log(err)
     } else {
-        console.log("Connect MongoDB success --> " + URI)
+        console.log('Connect MongoDB success --> ' + URI)
     }
 })
 
@@ -31,7 +31,7 @@ const CommandSchema = new mongoose.Schema(
 )
 
 // 连接文档集合, 获取 Linux 命令模型
-const Command = mongoose.model("Command", CommandSchema, "linux_command")
+const Command = mongoose.model('Command', CommandSchema, 'linux_command')
 
-// 将模型导出
+// 导出模型
 module.exports = { Command }
