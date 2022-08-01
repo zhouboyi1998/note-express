@@ -1,12 +1,19 @@
-// 引入 Express
 const express = require("express")
 const bodyParser = require("body-parser")
 const { Command } = require("./src/mongo/mongo")
 
-// 创建 Express Web Server
+// Express Web Server
 const app = express()
+
+// 添加中间件 BodyParser: 解析 JSON 格式的请求参数
 app.use(bodyParser.json({ limit: "1mb" }))
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// 添加中间件: 打印日志
+app.use((request, response, next) => {
+    console.log(new Date().toLocaleString() + ' --> ' + request.url)
+    next()
+})
 
 // 按 Linux 命令名称查询单条 Linux 命令
 app.route("/note/command/one/:commandName").get((request, response) => {
