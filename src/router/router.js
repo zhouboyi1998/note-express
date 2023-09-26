@@ -1,11 +1,12 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const router = express.Router()
 const { Command } = require('../mongo/mongo')
 
 // 按 Linux 命令名称查询单条 Linux 命令
-router.get('/one/:commandName', (request, response) => {
-    // 获取 URL 中的请求参数 (Linux 命令名称), 根据 Linux 命令名称查询单条 Linux 命令
-    Command.findOne({ 'command': request.param('commandName') }, (err, result) => {
+router.get('/one/:command', (request, response) => {
+    // 根据 Linux 命令名称查询单条 Linux 命令
+    Command.findOne({ 'command': request.params.command }, (err, result) => {
         if (err) {
             throw err
         } else {
@@ -48,10 +49,12 @@ router.get('/list/name', (request, response) => {
 
 // 插入单条 Linux 命令
 router.post('/insert', (request, response) => {
-    // 将请求体中的 JSON 转换成 Linux 命令模型
-    let command = Command(request.body)
+    // 从 RequestBody 中获取 Linux 命令模型
+    let command = request.body
+    // 生成新的 ObjectId
+    command._id = mongoose.Types.ObjectId()
     // 插入数据
-    command.save((err, result) => {
+    Command.create(command, (err, result) => {
         if (err) {
             throw err
         } else {
@@ -62,7 +65,7 @@ router.post('/insert', (request, response) => {
 
 // 更新单条 Linux 命令
 router.put('/update', (request, response) => {
-    // 将请求体中的 JSON 转换成 Linux 命令模型
+    // 从 RequestBody 中获取 Linux 命令模型
     let command = request.body
     // 根据 Linux 命令的名称进行更新
     Command.updateOne({ '_id': command._id }, command, (err, result) => {
@@ -75,11 +78,9 @@ router.put('/update', (request, response) => {
 })
 
 // 删除单条 Linux 命令
-router.delete('/delete/:commandId', (request, response) => {
-    // 获取 URL 中的请求参数 (字符串格式的 ID), 使用 Model 生成模型对象时, Model 会自动将字符串格式的 ID 转换为 ObjectId
-    let command = Command({ _id: request.param('commandId') })
-    // 根据 ObjectId 删除单条 Linux 命令
-    Command.deleteOne({ _id: command._id }, (err, result) => {
+router.delete('/delete/:_id', (request, response) => {
+    // 根据 _id 删除单条 Linux 命令
+    Command.deleteOne({ _id: request.params._id }, (err, result) => {
         if (err) {
             throw err
         } else {
