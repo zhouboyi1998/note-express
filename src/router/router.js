@@ -63,12 +63,44 @@ router.post('/insert', (request, response) => {
     })
 })
 
+// 批量插入 Linux 命令
+router.post('/insert/batch', (request, response) => {
+    // 从 RequestBody 中获取 Linux 命令模型数组
+    let commandList = request.body
+    // 生成新的 ObjectId
+    commandList.forEach(command => {
+        command._id = mongoose.Types.ObjectId()
+    })
+    // 插入数据
+    Command.create(commandList, (err, result) => {
+        if (err) {
+            throw err
+        } else {
+            response.json(result)
+        }
+    })
+})
+
 // 更新单条 Linux 命令
 router.put('/update', (request, response) => {
     // 从 RequestBody 中获取 Linux 命令模型
     let command = request.body
     // 根据 Linux 命令的名称进行更新
-    Command.updateOne({ '_id': command._id }, command, (err, result) => {
+    Command.updateOne({ _id: command._id }, command, (err, result) => {
+        if (err) {
+            throw err
+        } else {
+            response.json(result)
+        }
+    })
+})
+
+// 批量更新 Linux 命令
+router.put('/update/batch', (request, response) => {
+    // 从 RequestBody 中获取 Linux 命令模型数组
+    let body = request.body
+    // 根据 Linux 命令的名称进行更新
+    Command.updateMany({ _id: body._id }, body.command, (err, result) => {
         if (err) {
             throw err
         } else {
