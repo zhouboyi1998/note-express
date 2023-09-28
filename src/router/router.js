@@ -3,10 +3,23 @@ const mongoose = require('mongoose')
 const router = express.Router()
 const { Command } = require('../mongo/mongo')
 
+// 按 ObjectId 查询单条 Linux 命令
+router.get('/one/:commandId', (request, response) => {
+    // 根据 ObjectId 查询单条 Linux 命令
+    Command.findOne({ '_id': request.params.commandId }, (err, result) => {
+        if (err) {
+            throw err
+        } else {
+            // 返回 JSON 格式数据
+            response.json(result)
+        }
+    })
+})
+
 // 按 Linux 命令名称查询单条 Linux 命令
-router.get('/one/:command', (request, response) => {
+router.get('/one/name/:commandName', (request, response) => {
     // 根据 Linux 命令名称查询单条 Linux 命令
-    Command.findOne({ 'command': request.params.command }, (err, result) => {
+    Command.findOne({ 'command': request.params.commandName }, (err, result) => {
         if (err) {
             throw err
         } else {
@@ -36,13 +49,13 @@ router.get('/list/name', (request, response) => {
         if (err) {
             throw err
         } else {
-            let nameList = []
+            let commandNames = []
             // 组装 Linux 命令名称数组
             result.filter(command => {
-                nameList.push(command.command)
+                commandNames.push(command.command)
             })
             // 返回 JSON 格式数据
-            response.json(nameList)
+            response.json(commandNames)
         }
     })
 })
@@ -110,9 +123,9 @@ router.put('/update/batch', (request, response) => {
 })
 
 // 删除单条 Linux 命令
-router.delete('/delete/:_id', (request, response) => {
+router.delete('/delete/:commandId', (request, response) => {
     // 根据 _id 删除单条 Linux 命令
-    Command.deleteOne({ _id: request.params._id }, (err, result) => {
+    Command.deleteOne({ _id: request.params.commandId }, (err, result) => {
         if (err) {
             throw err
         } else {
